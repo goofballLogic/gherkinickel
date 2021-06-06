@@ -1,3 +1,1 @@
-module.exports = {
-    prepare: require("./src/prepare")
-};
+export { default as prepare } from "./src/prepare.js";

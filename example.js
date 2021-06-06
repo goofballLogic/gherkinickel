@@ -1,5 +1,5 @@
 import { entries } from "./src/registry.js";
-import prepare from "./src/prepare.js";
+import { prepare } from "./index.js";
 
 console.log(prepare);
 
