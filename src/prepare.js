@@ -40,10 +40,14 @@ export default async function prepare(registry, options) {
     const gherkinDocuments = await parseGherkin(featuresPath);
 
     debug("Seeking step definition files");
-    const stepDefFiles = await glob(path.resolve(stepDefinitionsPath, "**/*.js"));
+    const stepDefFiles = (
+        await glob(path.resolve(stepDefinitionsPath, "**/*.js"))
+    ).concat(
+        await glob(path.resolve(stepDefinitionsPath, "**/*.mjs"))
+    );
 
     debug("Requiring step definition files");
-    for (const x of stepDefFiles) import(x);
+    for (const x of stepDefFiles) await import(x);
 
     debug("Converting registry entries to expressions");
     const entriesWithExpressions = registry.entries.map(decorateEntryWithExpression);
@@ -151,9 +155,11 @@ function fromPathsAsJSON(stream) {
     const envelopes = [];
     if (stream.readableEnded) return envelopes;
     return new Promise((resolve, reject) => {
+
         stream.on("data", envelope => envelopes.push(envelope));
         stream.on("error", err => reject(err));
         stream.on("end", () => resolve(JSON.parse(JSON.stringify(envelopes))));
+
     });
 
 }
