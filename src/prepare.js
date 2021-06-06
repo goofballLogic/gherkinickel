@@ -2,6 +2,7 @@ const path = require("path");
 const gherkin = require("gherkin").default;
 const { glob: originalGlob } = require("glob");
 const { CucumberExpression, ParameterTypeRegistry } = require("cucumber-expressions");
+const debug = require("debug")("ghl:prepare");
 
 const glob = x =>
     new Promise((resolve, reject) =>
@@ -20,10 +21,19 @@ async function prepare(registry, options) {
     let featuresPath = resolveFeaturesPath(options);
     let stepDefinitionsPath = resolveStepDefinitionsPath({ ...options, featuresPath });
 
+    debug(`Resolved featuresPath: ${featuresPath}`);
+    debug(`Resolved stepsDefinitionsPath: ${stepDefinitionsPath}`);
+
+    debug("Parsing features");
     const gherkinDocuments = await parseGherkin(featuresPath);
 
+    debug("Seeking step definition files");
     const stepDefFiles = await glob(path.resolve(stepDefinitionsPath, "**/*.js"));
+
+    debug("Requiring step definition files");
     for (const x of stepDefFiles) require(x);
+
+    debug("Converting registry entries to expressions");
     const entriesWithExpressions = registry.entries.map(decorateEntryWithExpression);
 
     const features = gherkinDocuments.map(x => x.gherkinDocument).filter(x => x);
@@ -35,6 +45,7 @@ async function prepare(registry, options) {
     );
     const pickles = gherkinDocuments.map(x => x.pickle).filter(x => x);
 
+    debug("Procesisng pickles");
     for (const p of pickles) {
 
         if (p.uri) sanitizeUri(p);
@@ -51,6 +62,7 @@ async function prepare(registry, options) {
 
     }
 
+    debug("Sanitizing URLs");
     features.filter(f => f.uri).forEach(sanitizeUri);
 
     const featuresWithPickles = features.map(f => ({
@@ -58,6 +70,7 @@ async function prepare(registry, options) {
         pickles: pickles.filter(p => p.uri === f.uri)
     }));
 
+    debug("Done");
     return featuresWithPickles;
 
 };
