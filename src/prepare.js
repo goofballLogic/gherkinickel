@@ -98,13 +98,22 @@ function sanitizeUri(x) {
 async function parseGherkin(featuresPath) {
 
     const found = await glob(`${featuresPath}/**/*.feature`);
+
     const gherkinOptions = {
         includeSource: false,
         includeGherkinDocument: true,
         includePickles: true,
     };
-    const parsed = gherkin.fromPaths(found, gherkinOptions);
-    return await fromPathsAsJSON(parsed);
+    if (found.length) {
+
+        const parsed = gherkin.fromPaths(found, gherkinOptions);
+        return await fromPathsAsJSON(parsed);
+
+    } else {
+
+        return [];
+
+    }
 
 }
 
@@ -130,6 +139,7 @@ function resolveFeaturesPath(options) {
 function fromPathsAsJSON(stream) {
 
     const envelopes = [];
+    if (stream.readableEnded) return envelopes;
     return new Promise((resolve, reject) => {
         stream.on("data", envelope => envelopes.push(envelope));
         stream.on("error", err => reject(err));
