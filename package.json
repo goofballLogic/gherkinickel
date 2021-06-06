@@ -1,0 +1,21 @@
+{
+  "name": "gherkinickel",
+  "version": "0.0.1",
+  "description": "Run gherkin client-side",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "gherkin",
+    "BDD"
+  ],
+  "author": "goofballLogic",
+  "license": "MIT",
+  "dependencies": {
+    "cucumber-expressions": "^8.3.0",
+    "gherkin": "^9.0.0",
+    "glob": "^7.1.7"
+  }
+}
