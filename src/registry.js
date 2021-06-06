@@ -1,19 +1,15 @@
 const register = [];
 
-module.exports = {
+export function Given(text, strategy) {
+    register.push({ keyword: "Given", text, strategy });
+}
 
-    Given(text, strategy) {
-        register.push({ keyword: "Given", text, strategy });
-    },
+export function When(text, strategy) {
+    register.push({ keyword: "When", text, strategy });
+}
 
-    When(text, strategy) {
-        register.push({ keyword: "When", text, strategy });
-    },
+export function Then(text, strategy) {
+    register.push({ keyword: "Then", text, strategy });
+}
 
-    Then(text, strategy) {
-        register.push({ keyword: "Then", text, strategy });
-    },
-
-    get entries() { return [...register]; }
-
-};
+export function entries() { return [...register]; }

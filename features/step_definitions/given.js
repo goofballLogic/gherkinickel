@@ -1,4 +1,4 @@
-const { Given, When, Then } = require("../../src/registry");
+import { Given, When, Then } from "../../src/registry.js";
 
 Given("something", () => {
 

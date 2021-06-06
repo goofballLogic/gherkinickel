@@ -12,6 +12,7 @@
     "gherkin",
     "BDD"
   ],
+  "type": "module",
   "author": "goofballLogic",
   "license": "MIT",
   "dependencies": {

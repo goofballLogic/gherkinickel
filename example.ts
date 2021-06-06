@@ -1,14 +1,17 @@
 import { prepare } from "./index";
-import { IPrepareOptions } from "./src/prepare-types";
-import registry from "./src/registry";
+import { IPrepareOptions, IRegistry } from "./src/prepare-types";
+import { entries } from "./src/registry";
 
 (async function () {
 
-    const o: IPrepareOptions = {
+    const registry: IRegistry = {
+        entries: entries()
+    };
+    const options: IPrepareOptions = {
         featuresPath: "/features"
     };
 
-    const output = await prepare(registry, o);
+    const output = await prepare(registry, options);
     output.forEach(x => {
 
         console.log(x.uri);

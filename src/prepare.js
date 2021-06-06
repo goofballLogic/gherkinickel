@@ -1,8 +1,11 @@
-const path = require("path");
-const gherkin = require("gherkin").default;
-const { glob: originalGlob } = require("glob");
-const { CucumberExpression, ParameterTypeRegistry } = require("cucumber-expressions");
-const debug = require("debug")("ghl:prepare");
+import * as path from "path";
+import gherkinRoot from "gherkin";
+const gherkin = gherkinRoot.default;
+
+import originalGlob from "glob";
+import { CucumberExpression, ParameterTypeRegistry } from "cucumber-expressions";
+import debugSomething from "debug";
+const debug = debugSomething("ghl:prepare");
 
 const glob = x =>
     new Promise((resolve, reject) =>
@@ -24,7 +27,7 @@ Array.prototype.flatten = Array.prototype.flatten
 Array.prototype.mapFirst = Array.prototype.mapFirst
     || function (mapper) { for (var x of this) { const mapped = mapper(x); if (mapped) return mapped; } };
 
-async function prepare(registry, options) {
+export default async function prepare(registry, options) {
 
     if (!registry) throw new Error("A registry exposing a property 'entries' is required");
     let featuresPath = resolveFeaturesPath(options);
@@ -40,7 +43,7 @@ async function prepare(registry, options) {
     const stepDefFiles = await glob(path.resolve(stepDefinitionsPath, "**/*.js"));
 
     debug("Requiring step definition files");
-    for (const x of stepDefFiles) require(x);
+    for (const x of stepDefFiles) import(x);
 
     debug("Converting registry entries to expressions");
     const entriesWithExpressions = registry.entries.map(decorateEntryWithExpression);
@@ -83,8 +86,6 @@ async function prepare(registry, options) {
     return featuresWithPickles;
 
 };
-
-module.exports = prepare;
 
 function matchResult(test, keyword, text) {
 
