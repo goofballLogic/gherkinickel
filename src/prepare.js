@@ -10,7 +10,16 @@ const glob = x =>
             err ? reject(err) : resolve(matches)));
 
 Array.prototype.flatten = Array.prototype.flatten
-    || function () { return this.reduce((arr, xs) => xs ? [...arr, ...xs] : arr, []); };
+    || function () {
+        return this.reduce(
+            (arr, xs) => xs
+                ? Array.isArray(xs)
+                    ? [...arr, ...xs]
+                    : [...arr, xs]
+                : arr,
+            []
+        );
+    };
 
 Array.prototype.mapFirst = Array.prototype.mapFirst
     || function (mapper) { for (var x of this) { const mapped = mapper(x); if (mapped) return mapped; } };
