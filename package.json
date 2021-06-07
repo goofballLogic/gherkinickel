@@ -1,6 +1,6 @@
 {
   "name": "gherkinickel",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Run gherkin client-side",
   "main": "index.js",
   "types": "index.d.ts",
