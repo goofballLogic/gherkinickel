@@ -9,8 +9,7 @@ export interface IRegistry {
 }
 
 export interface IPrepareOptions {
-    featuresPath?: string,
-    stepDefinitionsPath?: string
+    featuresPath?: string
 }
 
 export interface Location {
