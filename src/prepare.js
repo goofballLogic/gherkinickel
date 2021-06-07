@@ -87,7 +87,7 @@ function matchResult(test, keyword, text) {
         return {
             keyword,
             args: matched.map(m => m.getValue()),
-            text
+            text: test.text
         };
 
 }
