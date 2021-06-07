@@ -1,5 +1,7 @@
 import { Given } from "../../src/registry.js";
 
+console.log("Loaded Given");
+
 Given("something", () => {
 
     console.log("Given something");

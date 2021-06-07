@@ -31,23 +31,11 @@ export default async function prepare(registry, options) {
 
     if (!registry) throw new Error("A registry exposing a property 'entries' is required");
     let featuresPath = resolveFeaturesPath(options);
-    let stepDefinitionsPath = resolveStepDefinitionsPath({ ...options, featuresPath });
 
     debug(`Resolved featuresPath: ${featuresPath}`);
-    debug(`Resolved stepsDefinitionsPath: ${stepDefinitionsPath}`);
 
     debug("Parsing features");
     const gherkinDocuments = await parseGherkin(featuresPath);
-
-    debug("Seeking step definition files");
-    const stepDefFiles = (
-        await glob(path.resolve(stepDefinitionsPath, "**/*.js"))
-    ).concat(
-        await glob(path.resolve(stepDefinitionsPath, "**/*.mjs"))
-    );
-
-    debug("Requiring step definition files");
-    for (const x of stepDefFiles) await import(x);
 
     debug("Converting registry entries to expressions");
     const entriesWithExpressions = registry.entries.map(decorateEntryWithExpression);
@@ -95,18 +83,19 @@ function matchResult(test, keyword, text) {
 
     if (test.keyword !== keyword) return;
     const matched = test.expression.match(text);
-    if (matched) {
+    if (matched)
         return {
             keyword,
             args: matched.map(m => m.getValue()),
             text
         };
-    }
 
 }
 
 function sanitizeUri(x) {
+
     x.uri = x.uri.replace(process.env.PWD, "")
+
 }
 
 async function parseGherkin(featuresPath) {
@@ -128,16 +117,6 @@ async function parseGherkin(featuresPath) {
         return [];
 
     }
-
-}
-
-function resolveStepDefinitionsPath(options) {
-
-    if (!options) throw new Error("No options");
-    let stepDefinitionsPath = options.stepDefinitionsPath || "step_definitions";
-    return path.isAbsolute(stepDefinitionsPath)
-        ? stepDefinitionsPath
-        : path.resolve(options.featuresPath, stepDefinitionsPath);
 
 }
 
