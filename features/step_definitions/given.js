@@ -1,4 +1,4 @@
-import { Given, When, Then } from "../../src/registry.js";
+import { Given } from "../../src/registry.js";
 
 Given("something", () => {
 
@@ -9,17 +9,5 @@ Given("something", () => {
 Given("something {word}", () => {
 
     console.log("Given something {word}");
-
-});
-
-When("something else", () => {
-
-    console.log("When something else");
-
-});
-
-Then("something", () => {
-
-    console.log("Then something");
 
 });
