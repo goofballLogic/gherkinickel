@@ -5,4 +5,7 @@ Feature: Example 2
 
     Scenario: Kitchen sink
         Given a string "this" and a number 4 and a boolean false
+        And some other Given
+        When something
+        And something else
         Then something

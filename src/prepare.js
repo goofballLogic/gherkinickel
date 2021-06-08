@@ -50,17 +50,19 @@ export default async function prepare(registry, options) {
     const pickles = gherkinDocuments.map(x => x.pickle).filter(x => x);
 
     debug("Procesisng pickles");
-    for (const p of pickles) {
+    for (const pickle of pickles) {
 
-        if (p.uri) sanitizeUri(p);
-        if (p.steps)
-            for (const s of p.steps) {
+        let keywordStage = "Given";
+        if (pickle.uri) sanitizeUri(pickle);
+        if (pickle.steps)
+            for (const pickleStep of pickle.steps) {
 
-                const documentStep = s.astNodeIds
+                const documentStep = pickleStep.astNodeIds
                     .mapFirst(x => stepIndex[x]);
                 const keyword = documentStep.keyword.trim();
-                s.matchedTest = entriesWithExpressions
-                    .mapFirst(test => matchResult(test, keyword, s.text));
+                if (keyword !== "And") keywordStage = keyword;
+                pickleStep.matchedTest = entriesWithExpressions
+                    .mapFirst(test => matchResult(test, keywordStage, pickleStep.text));
 
             }
 
